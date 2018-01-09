@@ -1,0 +1,43 @@
+%semnal dreptunghiular x durata 9s, factor de umplere
+%9/T*100 de perioada 40s
+T=40
+w0=(2*pi)/T
+t=0:0.1:100
+x=square(w0*t, 9/T*100)
+
+
+N=25
+%C=matricea coeficientilor pe care o egalam initial cu zero
+C=zeros(size(2*N+1))
+%x2 va fi semnalul reconstruit
+x2=0
+%for pt calculul coeficientilor de la -25 la 25
+for k=-N:N
+    
+    fun2=@(t) 1.*exp(-1j*k*w0*t)
+    
+    fun3=@(t) (-1).*exp(-1j*k*w0*t)
+    
+    re=real(C(k+N+1))
+    im=imag(C(k+N+1))
+
+    C(k+N+1)=re+1j*im
+    %se pun coeficientii in matrice
+
+    x2=x2+real(C(k+N+1)*exp(1j*k*w0*t))
+%semnalul va fi suma modulelor coeficientilor
+end
+
+
+subplot(2, 1, 1)
+stem((-N:N), abs(C)); title('Spectru de amplitudini');
+subplot(2, 1, 2); 
+%reprezentarea grafica a spectrului de amplitudine
+
+plot(t, x, '-')
+%reprezentarea semnalului initial
+hold on
+
+plot(t, x2, '.'); title('Semnalul reconstruit');
+%reprezentarea semnalului reconstruit
+hold off
